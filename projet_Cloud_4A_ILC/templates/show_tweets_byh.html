@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+
+    <title>Show_tweets_by_#ashtag</title>
+    <style>
+        /* styles pour les boutons de la barre de navigation */
+        .nav-btn {
+            background-color: hsl(199, 93%, 49%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+        /* Styles for centering the form */
+        #tweet-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+       
+        /* Styles for the tweets table */
+        #tweets-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        #tweets-table th, #tweets-table td {
+            text-align: left;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+        #tweets-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        #tweets-table th {
+            background-color: hsl(199, 93%, 49%);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+     <!-- barre de navigation -->
+     <nav>
+        <button class="nav-btn">Twitter</button>
+        <button class="nav-btn" id="tweet_btn" onclick="new_tweet()">New tweet</button>
+        <button class="nav-btn" id="show_tweet_btn" onclick="show_all_tweets()">Show all tweets</button>
+        <button class="nav-btn" id="show_tweet_P_btn" onclick="show_tweets_by_person()">Show tweets by person</button>
+        <button class="nav-btn" id="hashtag_btn" onclick="show_all_hachtag()">Show all hashtags</button>
+        <button class="nav-btn" id="tweet_hashtag_btn" onclick="show_tweets_by_hashtag()">tweets by hashtag</button>
+    </nav>
+
+    <h1>Show Tweets by Hashtag :</h1>
+    <!-- Form to search for tweets -->
+    <div id="search-form" >
+        <form>
+            <label for="hashtag">Enter the hashtag to search for:</label>
+            <input type="text" id="search" required>
+            <button type="submit" id="search-btn" onclick="searchTweetsByHashtag(document.getElementById('search').value)">Search</button>
+        </form>
+    </div>
+    <!-- Container for the tweets -->
+    <table id="tweets-table">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Username</th>
+                <th>Message</th>
+                <th>Hashtag</th>
+            </tr>
+        </thead>
+        <tbody id="tweets-container">
+            <!-- Tweet data will be displayed here -->
+        </tbody>
+    </table>
+
+    <script>
+        const searchBtn = document.getElementById('search-btn');
+
+        function searchTweetsByHashtag(hashtag) {
+            // Disable the search button
+            searchBtn.disabled = true;
+            // Retrieve tweets
+            fetch('/tweets/' + hashtag)
+
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Verify if the data is correctly retrieved
+
+                    // Clear the current content of the tweets table
+                    const tweetsContainer = document.getElementById('tweets-container');
+                    tweetsContainer.innerHTML = '';
+
+                    data.tweets.forEach(tweet => {
+                        const tweetElement = document.createElement('tr');
+
+                        const timestampElement = document.createElement('td');
+                        timestampElement.innerText = tweet.timestamp;
+
+                        const usernameElement = document.createElement('td');
+                        usernameElement.innerText = tweet.username;
+
+                        const messageElement = document.createElement('td');
+                        messageElement.innerText = tweet.message; 
+
+                        const hashtagElement = document.createElement('td');
+                        hashtagElement.innerText = tweet.sujet;
+
+                        tweetElement.appendChild(timestampElement);
+                        tweetElement.appendChild(usernameElement);
+                        tweetElement.appendChild(messageElement);
+                        tweetElement.appendChild(hashtagElement);
+
+                        tweetsContainer.appendChild(tweetElement);
+                            });
+                        })
+                        // Re-enable the search button after a delay of 2 seconds
+                        .finally(() => {
+                            setTimeout(() => {
+                                searchBtn.disabled = false;
+                            }, 2000);
+                        });
+                    }
+
+
+
+
+            function new_tweet()
+            {
+            window.location.href = 'home';
+            }
+
+            function show_all_tweets() {
+            window.location.href = 'show_all_tweets';
+            }
+
+            function show_tweets_by_person() {
+            window.location.href = 'show_tweet_byP';
+            }
+
+            function show_all_hachtag() {
+                window.location.href = 'show_all_h';
+            }
+
+            function show_tweets_by_hashtag() {
+                window.location.href = 'show_tweets_byh';
+            }
+        </script>
+</body>
+</html>

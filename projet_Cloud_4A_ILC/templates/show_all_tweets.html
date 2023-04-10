@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+
+    <title>Twitter - Tous les tweets</title>
+    <style>
+        /* styles pour le centrage du formulaire */
+        #tweet-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        /* styles pour les boutons de la barre de navigation */
+        .nav-btn {
+            background-color: hsl(199, 93%, 49%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+        /* styles pour la table des tweets */
+        #tweets-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        #tweets-table th, #tweets-table td {
+            text-align: left;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+        #tweets-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        #tweets-table th {
+            background-color: hsl(199, 93%, 49%);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- barre de navigation -->
+    <nav>
+        <button class="nav-btn">Twitter</button>
+        <button class="nav-btn" id="tweet_btn" onclick="new_tweet()">New tweet</button>
+        <button class="nav-btn" id="show_tweet_btn" onclick="show_all_tweets()">Show all tweets</button>
+        <button class="nav-btn" id="show_tweet_P_btn" onclick="show_tweets_by_person()">Show tweets by person</button>
+        <button class="nav-btn" id="hashtag_btn" onclick="show_all_hachtag()">Show all hashtags</button>
+        <button class="nav-btn" id="tweet_hashtag_btn" onclick="show_tweets_by_hashtag()">tweets by hashtag</button>
+    </nav>
+    <h1>Show all tweets :</h1>
+    <!-- container pour les tweets -->
+    <table id="tweets-table">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Username</th>
+                <th>Message</th>
+                <th>Hashtag</th>
+            </tr>
+        </thead>
+        <tbody id="tweets-container">
+            <!-- Ici seront affichés les tweets -->
+        </tbody>
+    </table>
+
+    <script>
+        // Récupération des tweets
+        fetch('/tweets')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); // Vérifier si les données sont correctement récupérées
+
+                const tweetsContainer = document.getElementById('tweets-container');
+
+                data.tweets.forEach(tweet => {
+                    const tweetElement = document.createElement('tr');
+
+                    const timestampElement = document.createElement('td');
+                    timestampElement.innerText = tweet.timestamp;
+
+                    const usernameElement = document.createElement('td');
+                    usernameElement.innerText = tweet.username;
+
+                    const messageElement = document.createElement('td');
+                    messageElement.innerText = tweet.message;
+
+                    const sujetElement = document.createElement('td');
+                    sujetElement.innerText = tweet.sujet;
+
+                    tweetElement.appendChild(timestampElement);
+                    tweetElement.appendChild(usernameElement);
+                    tweetElement.appendChild(messageElement);
+                    tweetElement.appendChild(sujetElement);
+
+                    tweetsContainer.appendChild(tweetElement);
+                });
+            })
+
+
+    
+        function new_tweet()
+         {
+        window.location.href = 'home';
+        }
+
+        function show_all_tweets() {
+        window.location.href = 'show_all_tweets';
+        }
+
+        function show_tweets_by_person() {
+        window.location.href = 'show_tweet_byP';
+        }
+
+        function show_all_hachtag() {
+            window.location.href = 'show_all_h';
+        }
+
+        function show_tweets_by_hashtag() {
+            window.location.href = 'show_tweets_byh';
+        }
+    </script>
+</body>
+</html>

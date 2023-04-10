@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Twitter - Accueil</title>
+    <style>
+        /* styles pour les boutons de la barre de navigation */
+        .nav-btn {
+            background-color: hsl(199, 93%, 49%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- barre de navigation -->
+    <nav>
+        <button class="nav-btn">Twitter</button>
+        <button class="nav-btn" id="tweet_btn" onclick="new_tweet()">New tweet</button>
+        <button class="nav-btn" id="show_tweet_btn" onclick="show_all_tweets()">Show all tweets</button>
+        <button class="nav-btn" id="show_tweet_P_btn" onclick="show_tweets_by_person()">Show tweets by person</button>
+        <button class="nav-btn" id="hashtag_btn" onclick="show_all_hachtag()">Show all hashtags</button>
+        <button class="nav-btn" id="tweet_hashtag_btn" onclick="show_tweets_by_hashtag()">tweets by hashtag</button>
+    </nav>
+
+    <!-- affichage du nom d'utilisateur -->
+
+    <h1>Bonjour <span id="username"></span>!</h1>
+
+    <!-- formulaire pour enregistrer un tweet -->
+    <div id="tweet-form" >
+        <form>
+            <label for="tweet">Nouveau tweet:</label>
+            <input type="text" id="tweet" required>
+            <button type="submit" onclick="saveTweet()">Enregistrer</button>
+        </form>
+    </div>
+    <script>
+        // récupération du nom d'utilisateur dans le stockage local
+        const usernameSpan = document.getElementById('username');
+        const username = localStorage.getItem('username');
+        if (username) {
+        usernameSpan.textContent = username;
+        } else {
+        usernameSpan.textContent = "Unknown user";
+        }
+        function saveTweet() {
+            const tweetInput = document.getElementById('tweet');
+            const tweet = tweetInput.value;
+            let sujet = "";
+                
+
+            // recherche du sujet
+            const hashtagIndex = tweet.indexOf('#');
+            if (hashtagIndex >= 0) {
+                const spaceIndex = tweet.indexOf(' ', hashtagIndex);
+                if (spaceIndex >= 0) {
+                    sujet = tweet.slice(hashtagIndex + 1, spaceIndex);
+                } else {
+                    sujet = tweet.slice(hashtagIndex + 1);
+                }
+            }
+            const username = localStorage.getItem('username');
+
+            const data = {
+                'username': username,
+                'tweet': tweet,
+                'sujet': sujet
+            };
+            
+            fetch('/tweet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Erreur lors de la sauvegarde du tweet.');
+            })
+            .then(data => {
+                alert(data.message);
+                tweetInput.value = '';
+            })
+            .catch(error => {
+                console.error(error);
+                alert(error.message);
+            });
+        }
+    
+        function new_tweet()
+         {
+        window.location.href = 'home';
+        }
+
+        function show_all_tweets() {
+        window.location.href = 'show_all_tweets';
+        }
+
+        function show_tweets_by_person() {
+        window.location.href = 'show_tweet_byP';
+        }
+
+        function show_all_hachtag() {
+            window.location.href = 'show_all_h';
+        }
+
+        function show_tweets_by_hashtag() {
+            window.location.href = 'show_tweets_byh';
+        }
+
+    </script>
+</body>
+    
+</html>
