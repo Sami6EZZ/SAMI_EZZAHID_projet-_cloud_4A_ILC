@@ -29,6 +29,7 @@ Le backend sera réalisé sous forme d'API qui permettra les fonctionnalités su
 -	afficher les tweets liés à une personne
 -	afficher les sujets 
 -	afficher les tweets liés à un sujet. 
+
 Les données seront stockées dans Redis sous forme de dictionnaire. La base de données contiendra deux ensembles de clés : l'un pour les tweets et l'autre pour les utilisateurs.
 Enfin, le frontend sera réalisé avec HTML/CSS/JS et communiquera avec l'API pour appeler les différentes routes codée avec PYTHON et le framework FLASK . en plus de deux Dockerfile permettront le lancement du backend et du frontend .
 
